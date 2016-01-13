@@ -10,7 +10,7 @@ args="?state=all&#{token}&per_page=100&page="
 target_url_repo="#{api_repos}/#{target_repo2}#{token}"
 
 
-DB = Sequel.connect('mysql2://root:@127.0.0.1:3306/github?characterEncoding=UTF-8')
+DB = Sequel.connect('mysql2://root:1234@127.0.0.1:3306/github?characterEncoding=UTF-8')
 
 options={}
 DB.create_table?(:repo_pr_abs,:charset => 'utf8') do
@@ -59,7 +59,7 @@ while true
     item['head']=item['head'].to_s
     item['base']=item['base'].to_s
     item['_links']=item['_links'] .to_s
-
+    item['user']=item['user'].to_s
     items.insert(item)
   end
 end

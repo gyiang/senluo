@@ -1,9 +1,10 @@
 require 'sequel'
 require 'json'
 
+token="access_token=877738b0ede13b627605e301dd4f00725697ca0d"
 DB = Sequel.connect('mysql2://root:1234@127.0.0.1:3306/github?characterEncoding=UTF-8')
 table=:repo_issues_abs
-
+# issue/pr login is login
 issue=Hash.new
 pr=Hash.new
 DB[table].select().each do |row|
@@ -22,7 +23,6 @@ DB[table].select().each do |row|
   else
     h[u]=[1,row[:comments]]
   end
-
 end
 
 # sort by issue/pr's nums

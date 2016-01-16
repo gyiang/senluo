@@ -41,7 +41,7 @@ p "match ratio(git):"+('%.2f' % (Float(math.length)/git.length*100)).to_s+"%"
 
 
 
-
+# method 2
 github2=[]
 
 DB[table].select().each do |row|

@@ -13,7 +13,7 @@ end
 
 
 d_time=[] #store duration_time =>[user,duration_time]
-DB[:repo_issues_abs].select().each do |row_i|
+DB[:repo_issues_abs].select().where().each do |row_i|
   #p "scan:"+row_i[:number].to_s
   if row_i[:comments]==0 then next end
 
@@ -22,7 +22,7 @@ DB[:repo_issues_abs].select().each do |row_i|
   issue_author=JSON.parse(row_i[:user].gsub('=>',':'))['login']
 
 
-  # get issue's all comments  mate=>[user,time,body]
+  # get issue's all comments  mate=>[user,time,body]+
   # c include issue+comments
   c=[]
   DB[:repo_issues_comments_abs].select().where(:issue_id=>row_i[:number]).each do |row_c|
@@ -80,15 +80,6 @@ DB[:repo_issues_abs].select().each do |row_i|
           d_time.push([call_user,-1])
           break
         end
-        #not find @
-=begin
-        if index_github==github.length-1 then
-          duration_time=item[1]-c[index-1][1]
-          d_time.push([item[0],duration_time])
-        else
-          next
-        end
-=end
       end
     end
   end
@@ -99,7 +90,7 @@ end
 h=Hash.new
 
 # 10min =prolong time
-hx_time=60*10
+hx_time=60*30
 d_time.each do |t|
   if t[1]<hx_time then
     next

@@ -39,21 +39,27 @@ DB[:repo_issues_abs].select().where().each do |row_i|
   # [0] is issues'content body
   c.unshift([issue_author,issue_created_at,row_i[:body]])
 
+
+  # sign whether the contributor is 1st post
+  onest={}
+  c.each_with_index do |one,one_index|
+    if onest[one] then
+      next
+    else
+      onest[one]=one_index
+    end
+  end
+
   # calculate ILR=> Number of low response for issues
   # c is all comments
-  start_t=0
-  sign=[]
+  # start_t=0
+
+  sign=[] #clear sign info
   c.each_with_index do |item,index|
     # get U1'time
     if index==0 then
       start_t=item[1]
       next
-    end
-
-    # if the item's author was called
-    if !sign.include?(index) then
-      duration_time=item[1]-c[index-1][1]
-      d_time.push([item[0],duration_time])
     end
 
     # scan @
@@ -63,6 +69,39 @@ DB[:repo_issues_abs].select().where().each do |row_i|
           # store current info
           cur_time=item[1]
           call_user=login[0]
+
+          # forword to find tongban,until [0]
+          index.times do |i_forward|
+            #whether it was calculated
+            if sign.include?(index) then
+              break
+            end
+
+            # to find if have see @user
+            if c[index-1-i_forward][0]==call_user then
+              # if find
+              # to @U' time
+              d_time.push([item[0],cur_time-c[index-1-i_forward][1]])
+              sign.push(index)
+              break
+            end
+
+            # if not find
+=begin
+            if i_forward==index-1 then
+              #whether 1st post
+              if onest[item[0]]==index then
+                # to issues's time
+                d_time.push(item[0],cur_time-start_t) #c[0][1]
+              else
+                # to nearest comment's time
+                duration_time=cur_time-c[index-1][1]
+                d_time.push([item[0],duration_time])
+              end
+            end
+            sign.push(index)
+=end
+          end
 
           # backward to find @user
           c.each_with_index do |c2,i2|
@@ -80,6 +119,19 @@ DB[:repo_issues_abs].select().where().each do |row_i|
           d_time.push([call_user,-1])
           break
         end
+      end
+    end
+
+    # no @ scene or has @ but forward@U not find
+    if !sign.include?(index) then
+      # 1st ?
+      if onest[item[0]]==index then
+        # to issues's time
+        d_time.push(item[0],item[1]-start_t) #c[0][1]
+      else
+        # to nearest comment's time
+        duration_time=item[1]-c[index-1][1]
+        d_time.push([item[0],duration_time])
       end
     end
   end

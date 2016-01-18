@@ -32,3 +32,7 @@ p days_between(Time.now.to_s,"2015-12-31T13:28:38Z")
 
 require 'mathn'
 p 1/2
+
+5.times do |i|
+  p i
+end

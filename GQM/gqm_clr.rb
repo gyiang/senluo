@@ -3,7 +3,6 @@ require 'json'
 
 DB = Sequel.connect('mysql2://root:1234@127.0.0.1:3306/test?characterEncoding=UTF-8')
 
-
 # extra github' login
 github=[]
 DB[:repo_contributor_abs].select(:login,:email).each do |row|
@@ -33,12 +32,13 @@ DB[:repo_issues_abs].select().where().each do |row_i|
     user=comments['user']['login']
     c.push [user,t,body]
   end
+  #[[0][1][2],[0][1][2],[0][1]..] 0=author 1=time 2=body
 
   # sort by time
   c.sort!{|x,y| x[1]<=>y[1]}
+
   # [0] is issues'content body
   c.unshift([issue_author,issue_created_at,row_i[:body]])
-
 
   # sign whether the contributor is 1st post
   onest={}
@@ -86,21 +86,6 @@ DB[:repo_issues_abs].select().where().each do |row_i|
               break
             end
 
-            # if not find
-=begin
-            if i_forward==index-1 then
-              #whether 1st post
-              if onest[item[0]]==index then
-                # to issues's time
-                d_time.push(item[0],cur_time-start_t) #c[0][1]
-              else
-                # to nearest comment's time
-                duration_time=cur_time-c[index-1][1]
-                d_time.push([item[0],duration_time])
-              end
-            end
-            sign.push(index)
-=end
           end
 
           # backward to find @user
@@ -135,7 +120,7 @@ DB[:repo_issues_abs].select().where().each do |row_i|
       end
     end
   end
-  #p c
+  p c
 end
 #p d_time
 

@@ -43,7 +43,7 @@ DBCode[:problem_detail].select().each do |row|
         programing['updated_at']='2016-01-31'
         code=DBCode[:problem_code_gnu].select(:problem_index,:code).where(:problem_index=>row[:problem_index]).to_a
         if code!=[] then
-          programing['standard_code']=code[0:code]
+          programing['standard_code']=code[0][:code]
         end
         programings.insert(programing)
 

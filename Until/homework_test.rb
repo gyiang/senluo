@@ -5,7 +5,6 @@ require 'sequel'
 DBCode = Sequel.connect('mysql2://root:1234@127.0.0.1:3306/trustie122?characterEncoding=UTF-8')
 DBTrustie= Sequel.connect('mysql2://root:1234@127.0.0.1:3306/trustie122?characterEncoding=UTF-8')
 
-
 commons=DBTrustie[:homework_commons]
 programings=DBTrustie[:homework_detail_programings]
 homework_tests=DBTrustie[:homework_tests]
@@ -20,7 +19,8 @@ index=0
 DBCode[:problem_detail].select().each do |row|
         index= "%04d" % (index.to_i+1)
         ab=row[:problem_index][row[:problem_index].length-1]
-        common['name']="#{index}#{ab}(#{row[:problem_index]}) #{row[:name]} / 题目(tag)_姓名"
+        #common['name']="#{index}#{ab}(#{row[:problem_index]}) #{row[:name]} / 题目(tag)_姓名"
+        common['name']="#{row[:name].chomp} / 题目（标签）（#{row[:problem_index]}-#{index}#{ab}） 姓名编辑"
         common['user_id']=11890
         common['description']=row[:description].gsub("\n","<br />\n")
         p common['description']

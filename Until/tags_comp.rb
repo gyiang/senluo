@@ -9,6 +9,7 @@ end
 
 
 h={} #77757 elements
+maxid=0
 DB[:open_source_projects].select(:id).each do |row|
   DB[:proj_tag].select().where(:projId=>row[:id]).each do |tag|
       if h[tag[:projId]] then
@@ -17,8 +18,10 @@ DB[:open_source_projects].select(:id).each do |row|
         h[tag[:projId]]=[tag[:tag]]
       end
   end
+  maxid=[row[:id],maxid].max
   p row[:id]
 end
+p "maxid:#{maxid}"
 
 is_save=false
 if is_save then
@@ -61,5 +64,5 @@ h.each_pair do |k1,v1|
     values.insert(value)
     #resulet.puts("#{k1},#{k2},#{(v1 & v2).size}\n")
   end
-  p "#{k1}/#{h.size}"
+  p "#{k1}/#{maxid}"
 end

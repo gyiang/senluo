@@ -1,4 +1,4 @@
-git_tree="--git-dir=/root/Desktop/lab/ActionBarSherlock/.git"
+git_tree="--git-dir=/root/Desktop/elasticsearch/.git"
 
 #total commits,contributors
 total_commits=`git #{git_tree} log --pretty=oneline | wc -l`.to_i

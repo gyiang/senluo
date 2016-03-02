@@ -16,14 +16,6 @@ to_check = MossRuby.empty_file_hash
 MossRuby.add_file(to_check, "/root/Desktop/RxJava/src/perf/java/rx/ObservablePerfBaseline.java")
 MossRuby.add_file(to_check, "/root/Desktop/ObservablePerfBaseline.java")
 MossRuby.add_file(to_check, "/root/Desktop/vace/ObservablePerfBaseline.java")
-MossRuby.add_file(to_check, "/root/Desktop/vace/O.java")
-MossRuby.add_file(to_check, "/root/Desktop/vace/O1.java")
-MossRuby.add_file(to_check, "/root/Desktop/vace/O2.java")
-MossRuby.add_file(to_check, "/root/Desktop/vace/O3.java")
-MossRuby.add_file(to_check, "/root/Desktop/vace/O4.java")
-MossRuby.add_file(to_check, "/root/Desktop/vace/O5.java")
-MossRuby.add_file(to_check, "/root/Desktop/vace/O6.java")
-
 start=Time.now.to_i
 # Get server to process files
 url = moss.check to_check
@@ -36,8 +28,8 @@ puts "Got results from #{url}"
 results.each { |match|
   puts "----"
   match.each { |file|
-    #puts "#{file[:filename]} #{file[:pct]} #{file[:html]}"
-    p file[:filename],file[:pct]
+    puts "#{file[:filename]} #{file[:pct]} #{file[:html]}"
+    #p file[:filename],file[:pct]
   }
 }
 end1=Time.now.to_i

@@ -2,9 +2,9 @@ require 'sequel'
 require 'json'
 require 'set'
 DB = Sequel.connect('mysql2://root:1234@127.0.0.1:3306/co_user_test?characterEncoding=UTF-8')
-
-
+$git_tree="--git-dir=/root/Desktop/elasticsearch/.git"
 $gg_author_and_login={}
+
 def github_co
   $cnt=0
   DB[:commits_github].select(:sha,:commit_info).all.each do |row|
@@ -38,9 +38,8 @@ def get_git_user_and_email
 
   h1={}
   h2={}
-  git_tree="--git-dir=/root/Desktop/elasticsearch/.git"
   # %an=name %ae=email
-  `git #{git_tree}  log --pretty='%an,%ae' | sort -u`.each_line do |item|
+  `git #{$git_tree}  log --pretty='%an,%ae' | sort -u`.each_line do |item|
     author,email=item.chomp.split(",")
     # co_eamil
     if h1[email] then
@@ -86,10 +85,6 @@ def get_git_user_and_email
       end
     end
   end
-
-
-
-
 
   #return
   h3

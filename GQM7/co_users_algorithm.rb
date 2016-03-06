@@ -77,7 +77,7 @@ def get_git_user_and_email
   end
 
   #output it
-  h3.each do |k,v|
+  h3.each do |k,v|T
     p [k,v]
     v.each do |email|
       if $gg_author_and_login[email] then

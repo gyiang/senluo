@@ -5,6 +5,7 @@ DB = Sequel.connect('mysql2://root:1234@127.0.0.1:3306/test1?characterEncoding=U
 $git_tree="--git-dir=/root/Desktop/elasticsearch/.git"
 author="kimchy"
 
+# target table
 users_radar=DB[:users_radar]
 tags=[]
 
@@ -37,9 +38,13 @@ tags_date.each do |k,v|
 
   closes=`git #{$git_tree} log --pretty="%s" --author="#{author}" --before="#{v}" | grep -P '(close|closes|closed)\s#\\d+' | wc -l`.chomp
 
+  # try to pre it
+  id=DB[:users].select(:user_id).where(:git_name=>"#{author}").all[0][:user_id]
+  issues=DB[:issues].where('created_at< ?',v).group_and_count(:author_id).all.detect{|x| x[:author_id]==id}[:count]
+  comments=DB[:issue_comments].where('created_at< ?',2012).group_and_count(:author_id).all.detect{|x| x[:author_id]==id}[:count]
+
   # merge tag
   tag=k.match(/(v\d+\.\d+)/)[0]
-
   radar[tag]=[cmt.to_i,add.to_i,del.to_i,fixs.to_i,closes.to_i,v] if (radar[tag]==nil or radar[tag][0]<cmt.to_i)
 
   p k

@@ -3,7 +3,7 @@ require 'pp'
 
 DB = Sequel.connect('mysql2://root:1234@127.0.0.1:3306/test1?characterEncoding=UTF-8')
 $git_tree="--git-dir=/root/Desktop/elasticsearch/.git"
-author="kimchy"
+author="Martijn van Groningen"
 
 # target table
 users_radar=DB[:users_radar]
@@ -40,8 +40,6 @@ tags_date.each do |k,v|
 
   # try to pre it
   id=DB[:users].select(:user_id).where(:git_name=>"#{author}").all[0][:user_id]
-  issues=DB[:issues].where('created_at< ?',v).group_and_count(:author_id).all.detect{|x| x[:author_id]==id}[:count]
-  comments=DB[:issue_comments].where('created_at< ?',2012).group_and_count(:author_id).all.detect{|x| x[:author_id]==id}[:count]
 
   # merge tag
   tag=k.match(/(v\d+\.\d+)/)[0]
@@ -62,6 +60,20 @@ radar.each do |k,v|
   ur[:tag]=k
   users_radar.insert(ur)
 end
+
+
+# cal issues comments
+id=DB[:users].select(:user_id).where(:git_name=>"#{author}").all[0][:user_id]
+DB[:users_radar].select(:tag,:date).each do |d|
+  issues=DB[:issues].where('created_at< ?',d[:date]).group_and_count(:author_id).all.detect{|x|x[:author_id]==id}
+  comments=DB[:issue_comments].where('created_at< ?',d[:date]).
+      group_and_count(:author_id).all.detect{|x| x[:author_id]==id}
+  # if nil
+  issues={:count=>0} if issues.nil?
+  comments={:count=>0} if comments.nil?
+  DB[:users_radar].where(:tag=>d[:tag]).update(:issues=>issues[:count],:comments=>comments[:count])
+end
+
 
 
 

@@ -61,7 +61,6 @@ radar.each do |k,v|
   users_radar.insert(ur)
 end
 
-
 # cal issues comments
 id=DB[:users].select(:user_id).where(:git_name=>"#{author}").all[0][:user_id]
 DB[:users_radar].select(:tag,:date).each do |d|
